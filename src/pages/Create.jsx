@@ -30,10 +30,13 @@ import {
 
 import { useNavigate } from "react-router";
 import { useCreatePost } from "../features/posts/useCreatePost";
+import { useGetUser } from "../authentication/useGetUser";
 
 function Create() {
   const navigate = useNavigate();
   const [isUploaded, setIsUploaded] = useState(false);
+  const { getUser } = useGetUser();
+
   const [tags, setTags] = useState([]);
   const { createPost } = useCreatePost();
   const {
@@ -57,12 +60,20 @@ function Create() {
   }, [watch]);
 
   function handleCreateForm({ title, description, image }) {
-    console.log(image);
+    if (!getUser) return;
+
+    const createdBy = {
+      email: getUser.user_metadata.email,
+      username: getUser.user_metadata.username,
+      id: getUser?.id,
+    };
+
+    createPost({ image: image[0], title, description, tags, createdBy });
   }
 
   function handleAddTags() {
-    const value = getValues("tags");
-    if (value) {
+    const value = getValues("tags").trim();
+    if (value && !tags.includes(value)) {
       setTags((prevTags) => [...prevTags, value]);
       setValue("tags", "");
     }
@@ -133,8 +144,8 @@ function Create() {
                 placeholder="Add a Description"
                 {...register("description", {
                   maxLength: {
-                    value: 100,
-                    message: "The word limit is 100.",
+                    value: 300,
+                    message: "The word limit is 300.",
                   },
                 })}
               />
@@ -158,7 +169,7 @@ function Create() {
                   },
                 })}
               />
-              <StyledAddTagButton onClick={handleAddTags}>
+              <StyledAddTagButton type="button" onClick={handleAddTags}>
                 <IoIosAddCircleOutline
                   strokeWidth={10}
                   size={30}

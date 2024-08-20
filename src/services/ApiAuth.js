@@ -13,7 +13,7 @@ export async function signUp({ email, password, username }) {
     });
 
     if (error) throw new Error(error.message);
-    console.log(data);
+
     return data;
   } catch (error) {
     console.error("Error during sign-up:", error.message);

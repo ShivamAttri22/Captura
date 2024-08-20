@@ -15,7 +15,7 @@ function UserProvider({ children }) {
     },
     [isLoggedin, getUser]
   );
-  console.log(isLoggedin);
+
   return (
     <UserContext.Provider value={{ getUser, isLoggedin, setIsLoggedin }}>
       {children}

@@ -89,7 +89,7 @@ const Newsletter = () => {
     e.preventDefault();
     // Add logic to handle the email submission
     // For now, just log the email and display a success message
-    console.log("Email submitted:", email);
+
     setMessage("Thank you for subscribing!");
     setEmail("");
   };
